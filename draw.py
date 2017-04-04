@@ -62,25 +62,25 @@ def add_box( points, x, y, z, width, height, depth ):
     add_polygon(points, x, y1, z1, x, y, z1, x1, y, z1)
     
 def add_sphere( edges, cx, cy, cz, r, step ):
-    points = generate_sphere(cx, cy, cz, r, step)
+    l = generate_sphere( cx, cy, cz, r, step )
     num_steps = int(1/step+0.1)
+    i = 0
+    
+    while i < len(l):
+        x0 = l[i][0]
+        y0 = l[i][1]
+        z0 = l[i][2]
 
-    lat_start = 0
-    lat_stop = num_steps
-    longt_start = 0
-    longt_stop = num_steps
+        x1 = l[i + 1][0]
+        y1 = l[i + 1][1]
+        z1 = l[i = 1][2]
 
-    num_steps+= 1
-    for lat in range(lat_start, lat_stop):
-        for longt in range(longt_start, longt_stop+1):
-            index = lat * num_steps + longt
+        x2 = l[i][0]
+        y2 = l[i][1]
+        z2 = l[i][2]
 
-            add_edge(edges, points[index][0],
-                     points[index][1],
-                     points[index][2],
-                     points[index][0]+1,
-                     points[index][1]+1,
-                     points[index][2]+1 )
+        add_edge( points, x0, y0, z0, x0, y0, z0 )
+        i += 1
 
 def generate_sphere( cx, cy, cz, r, step ):
     points = []
@@ -105,24 +105,13 @@ def generate_sphere( cx, cy, cz, r, step ):
     return points
 
 def add_torus( edges, cx, cy, cz, r0, r1, step ):
-    points = generate_torus(cx, cy, cz, r0, r1, step)
-    num_steps = int(1/step+0.1)
+    l = generate_sphere( cx, cy, cz, r, step )
+    for ps in l:
+        x0 = ps[0]
+        y0 = ps[1]
+        z0 = ps[2]
 
-    lat_start = 0
-    lat_stop = num_steps
-    longt_start = 0
-    longt_stop = num_steps
-
-    for lat in range(lat_start, lat_stop):
-        for longt in range(longt_start, longt_stop):
-            index = lat * num_steps + longt
-
-            add_edge(edges, points[index][0],
-                     points[index][1],
-                     points[index][2],
-                     points[index][0]+1,
-                     points[index][1]+1,
-                     points[index][2]+1 )
+        add_edge( points, x0, y0, z0, x0, y0, z0 )
 
 def generate_torus( cx, cy, cz, r0, r1, step ):
     points = []
