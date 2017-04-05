@@ -66,7 +66,7 @@ def add_sphere( edges, cx, cy, cz, r, step ):
     num_steps = int(1/step+0.1)
     i = 0
 
-    while i < (len(l) - num_steps - 1):
+    while i < (len(l) - 1):
         x0 = l[i][0]
         y0 = l[i][1]
         z0 = l[i][2]
@@ -75,35 +75,23 @@ def add_sphere( edges, cx, cy, cz, r, step ):
         y1 = l[i + 1][1]
         z1 = l[i + 1][2]
 
-        x2 = l[i + num_steps + 1][0]
-        y2 = l[i + num_steps + 1][1]
-        z2 = l[i + num_steps + 1][2]
+        if i >= (len(l) - num_steps - 1): #for the last "slice"
+            x2 = l[i - len(l) + num_steps + 1][0]
+            y2 = l[i - len(l) + num_steps + 1][1]
+            z2 = l[i - len(l) + num_steps + 1][2]
 
-        x3 = l[i + num_steps][0]
-        y3 = l[i + num_steps][1]
-        z3 = l[i + num_steps][2]
+            x3 = l[i - len(l) + num_steps][0]
+            y3 = l[i - len(l) + num_steps][1]
+            z3 = l[i - len(l) + num_steps][2]
 
-        add_polygon( edges, x0, y0, z0, x1, y1, z1, x2, y2, z2 )
-        add_polygon( edges, x2, y2, z2, x3, y3, z3, x0, y0, z0 )
-        i += 1
+        else:
+            x2 = l[i + num_steps + 1][0]
+            y2 = l[i + num_steps + 1][1]
+            z2 = l[i + num_steps + 1][2]
 
-    #for the last "slice"
-    while i < len(l) - 1:
-        x0 = l[i][0]
-        y0 = l[i][1]
-        z0 = l[i][2]
-
-        x1 = l[i + 1][0]
-        y1 = l[i + 1][1]
-        z1 = l[i + 1][2]
-
-        x2 = l[i - len(l) + num_steps + 1][0]
-        y2 = l[i - len(l) + num_steps + 1][1]
-        z2 = l[i - len(l) + num_steps + 1][2]
-
-        x3 = l[i - len(l) + num_steps][0]
-        y3 = l[i - len(l) + num_steps][1]
-        z3 = l[i - len(l) + num_steps][2]
+            x3 = l[i + num_steps][0]
+            y3 = l[i + num_steps][1]
+            z3 = l[i + num_steps][2]
 
         add_polygon( edges, x0, y0, z0, x1, y1, z1, x2, y2, z2 )
         add_polygon( edges, x2, y2, z2, x3, y3, z3, x0, y0, z0 )
@@ -133,13 +121,40 @@ def generate_sphere( cx, cy, cz, r, step ):
     return points
 
 def add_torus( edges, cx, cy, cz, r0, r1, step ):
-    l = generate_sphere( cx, cy, cz, r, step )
-    for ps in l:
-        x0 = ps[0]
-        y0 = ps[1]
-        z0 = ps[2]
+    l = generate_torus( cx, cy, cz, r0, r1, step )
+    num_steps = int(1/step+0.1)
+    i = 0
 
-        add_edge( points, x0, y0, z0, x0, y0, z0 )
+    while i < (len(l) - 1):
+        x0 = l[i][0]
+        y0 = l[i][1]
+        z0 = l[i][2]
+
+        x1 = l[i + 1][0]
+        y1 = l[i + 1][1]
+        z1 = l[i + 1][2]
+
+        if i >= (len(l) - num_steps - 1): #for the last "slice"
+            x2 = l[i - len(l) + num_steps + 1][0]
+            y2 = l[i - len(l) + num_steps + 1][1]
+            z2 = l[i - len(l) + num_steps + 1][2]
+
+            x3 = l[i - len(l) + num_steps][0]
+            y3 = l[i - len(l) + num_steps][1]
+            z3 = l[i - len(l) + num_steps][2]
+
+        else:
+            x2 = l[i + num_steps + 1][0]
+            y2 = l[i + num_steps + 1][1]
+            z2 = l[i + num_steps + 1][2]
+
+            x3 = l[i + num_steps][0]
+            y3 = l[i + num_steps][1]
+            z3 = l[i + num_steps][2]
+
+        add_polygon( edges, x0, y0, z0, x1, y1, z1, x2, y2, z2 )
+        add_polygon( edges, x2, y2, z2, x3, y3, z3, x0, y0, z0 )
+        i += 1
 
 def generate_torus( cx, cy, cz, r0, r1, step ):
     points = []
@@ -150,7 +165,7 @@ def generate_torus( cx, cy, cz, r0, r1, step ):
     circ_start = 0
     circ_stop = num_steps
 
-    print num_steps
+    #print num_steps
 
     for rotation in range(rot_start, rot_stop):
         rot = step * rotation
