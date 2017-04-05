@@ -14,23 +14,33 @@ def draw_polygons( points, screen, color ):
 
     point = 0
     while point < len(points) - 2:
-        draw_line( int(points[point][0]),
-                   int(points[point][1]),
-                   int(points[point+1][0]),
-                   int(points[point+1][1]),
-                   screen, color)
-        draw_line( int(points[point][0]),
-                   int(points[point][1]),
-                   int(points[point+2][0]),
-                   int(points[point+2][1]),
-                   screen, color)
-        draw_line( int(points[point+1][0]),
-                   int(points[point+1][1]),
-                   int(points[point+2][0]),
-                   int(points[point+2][1]),
-                   screen, color)
+        x0 = points[point][0]
+        y0 = points[point][1]
+        z0 = points[point][2]
+
+        x1 = points[point+1][0]
+        y1 = points[point+1][1]
+        z1 = points[point+1][2]
+
+        x2 = points[point+2][0]
+        y2 = points[point+2][1]
+        z2 = points[point+2][2]
+
+        if calc_normal(x0, y0, z0, x1, y1, z1, x2, y2, z2)[2] >= 0:
+            draw_line( int(x0), int(y0), int(x1), int(y1),
+                       screen, color)
+            draw_line( int(x1), int(y1), int(x2), int(y2),
+                       screen, color)
+            draw_line( int(x0), int(y0), int(x2), int(y2),
+                       screen, color)
         point += 3
 
+def calc_normal( x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
+    a = [x1 - x0, y1 - y0, z2 - z0]
+    b = [x2 - x0, y2 - y0, z2 - z0]
+    return [ (a[1]*b[2]) - (a[2]*b[1]),
+            (a[2]*b[0]) - (a[0]*b[2]),
+            (a[0]*b[1]) - (a[1]*b[0]) ]
 
 def add_box( points, x, y, z, width, height, depth ):
     x1 = x + width
