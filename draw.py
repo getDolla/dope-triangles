@@ -133,52 +133,38 @@ def generate_sphere( cx, cy, cz, r, step ):
 def add_torus( edges, cx, cy, cz, r0, r1, step ):
     l = generate_torus( cx, cy, cz, r0, r1, step )
     num_steps = int(1/step+0.1)
-    i = 0
-    j = 1
 
-    while i < len(l):
-        x0 = l[i][0]
-        y0 = l[i][1]
-        z0 = l[i][2]
+    for j in range(0, len(l), num_steps):
+        for i in range(num_steps):
+            x0 = l[j + i][0]
+            y0 = l[j + i][1]
+            z0 = l[j + i][2]
 
-        if i == (j * num_steps - 1): #last point on circle
-            x1 = l[(j-1) * num_steps][0]
-            y1 = l[(j-1) * num_steps][1]
-            z1 = l[(j-1) * num_steps][2]
+            k = j + num_steps if (j != len(l) - num_steps) else 0
 
-            if i >= (len(l) - num_steps - 1): #for the last "slice"
-                x2 = l[0][0]
-                y2 = l[0][1]
-                z2 = l[0][2]
-            j += 1
+            if i == (num_steps - 1): #last point on circle
+                x1 = l[j][0]
+                y1 = l[j][1]
+                z1 = l[j][2]
 
-        else:
-            x1 = l[i + 1][0]
-            y1 = l[i + 1][1]
-            z1 = l[i + 1][2]
+                x2 = l[k][0]
+                y2 = l[k][1]
+                z2 = l[k][2]
+            else:
+                x1 = l[j + i + 1][0]
+                y1 = l[j + i + 1][1]
+                z1 = l[j + i + 1][2]
 
-        if i >= (len(l) - num_steps - 1): #for the last "slice"
-            if i != (j * num_steps - 1):
-                x2 = l[i - len(l) + num_steps + 1][0]
-                y2 = l[i - len(l) + num_steps + 1][1]
-                z2 = l[i - len(l) + num_steps + 1][2]
+                x2 = l[k + i + 1][0]
+                y2 = l[k + i + 1][1]
+                z2 = l[k + i + 1][2]
 
-            x3 = l[i - len(l) + num_steps][0]
-            y3 = l[i - len(l) + num_steps][1]
-            z3 = l[i - len(l) + num_steps][2]
+            x3 = l[k + i][0]
+            y3 = l[k + i][1]
+            z3 = l[k + i][2]
 
-        else:
-            x2 = l[i + num_steps + 1][0]
-            y2 = l[i + num_steps + 1][1]
-            z2 = l[i + num_steps + 1][2]
-
-            x3 = l[i + num_steps][0]
-            y3 = l[i + num_steps][1]
-            z3 = l[i + num_steps][2]
-
-        add_polygon( edges, x0, y0, z0, x1, y1, z1, x2, y2, z2 )
-        add_polygon( edges, x2, y2, z2, x3, y3, z3, x0, y0, z0 )
-        i += 1
+            add_polygon( edges, x0, y0, z0, x1, y1, z1, x2, y2, z2 )
+            add_polygon( edges, x2, y2, z2, x3, y3, z3, x0, y0, z0 )
 
 def generate_torus( cx, cy, cz, r0, r1, step ):
     points = []
