@@ -158,7 +158,7 @@ def add_torus( edges, cx, cy, cz, r0, r1, step ):
             z1 = l[i + 1][2]
 
         if i >= (len(l) - num_steps - 1): #for the last "slice"
-            if (i != (j * num_steps - 1):
+            if i != (j * num_steps - 1):
                 x2 = l[i - len(l) + num_steps + 1][0]
                 y2 = l[i - len(l) + num_steps + 1][1]
                 z2 = l[i - len(l) + num_steps + 1][2]
