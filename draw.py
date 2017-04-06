@@ -26,7 +26,7 @@ def draw_polygons( points, screen, color ):
         y2 = points[point+2][1]
         z2 = points[point+2][2]
 
-        if calc_normal(x0, y0, z0, x1, y1, z1, x2, y2, z2)[2] >= 0:
+        if calc_normal(x0, y0, z0, x1, y1, z1, x2, y2, z2)[2] > 0:
             draw_line( int(x0), int(y0), int(x1), int(y1),
                        screen, color)
             draw_line( int(x1), int(y1), int(x2), int(y2),
@@ -134,17 +134,30 @@ def add_torus( edges, cx, cy, cz, r0, r1, step ):
     l = generate_torus( cx, cy, cz, r0, r1, step )
     num_steps = int(1/step+0.1)
     i = 0
+    j = 1
 
-    while i < (len(l) - 1):
+    while i < len(l):
         x0 = l[i][0]
         y0 = l[i][1]
         z0 = l[i][2]
 
-        x1 = l[i + 1][0]
-        y1 = l[i + 1][1]
-        z1 = l[i + 1][2]
+        if i == (j * num_steps - 1): #last point on circle
+            x1 = l[(j-1) * num_steps][0]
+            y1 = l[(j-1) * num_steps][1]
+            z1 = l[(j-1) * num_steps][2]
 
-        if i >= (len(l) - num_steps - 1): #for the last "slice"
+            if i >= (len(l) - num_steps - 1): #for the last "slice"
+                x2 = l[0][0]
+                y2 = l[0][1]
+                z2 = l[0][2]
+            j += 1
+
+        else:
+            x1 = l[i + 1][0]
+            y1 = l[i + 1][1]
+            z1 = l[i + 1][2]
+
+        if i >= (len(l) - num_steps - 1) and (i != (j * num_steps - 1): #for the last "slice"
             x2 = l[i - len(l) + num_steps + 1][0]
             y2 = l[i - len(l) + num_steps + 1][1]
             z2 = l[i - len(l) + num_steps + 1][2]
